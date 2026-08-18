@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simple-eda"
+version = "0.1.0"
+description = "A tiny pandas-based exploratory data analysis toolkit."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = ["pandas"]
+authors = [
+    { name = "Your Name", email = "you@example.com" }
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
