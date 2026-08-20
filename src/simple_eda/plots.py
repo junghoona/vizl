@@ -78,18 +78,27 @@ def bar_plot(df, category, value):
 
 
 def hbar_plot(df, category, value):
-    """Horizontal capsule bars filled with the coral-to-periwinkle gradient."""
+    """Horizontal capsule bars filled with the coral-to-periwinkle gradient.
+
+    Each bar represents one row of `df`: its position/label along the
+    y-axis is `category`, and its length (also annotated past the bar
+    end) is `value`.
+    """
     fig, ax = s.new_fig()
     cats, vals = df[category].tolist(), df[value].to_numpy(dtype=float)
     ys = range(len(cats))
     for yi, v in zip(ys, vals):
         s.hbar(ax, yi, v, 0.55, s.BLEND_CMAP)
+        ax.text(v + vals.max() * 0.02, yi, f"{v:g}", ha="left",
+                va="center", fontsize=10, color=s.THEME["text"])
     ax.set_yticks(list(ys))
     ax.set_yticklabels(cats)
     ax.set_ylim(-0.7, len(cats) - 0.3)
     ax.set_xlim(0, vals.max() * 1.15)
     ax.invert_yaxis()
-    s.title(ax, value)
+    ax.set_xlabel(value)
+    ax.set_ylabel(category)
+    s.title(ax, f"{value} by {category}")
     return fig, ax
 
 
