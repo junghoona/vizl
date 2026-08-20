@@ -60,12 +60,14 @@ ts = pd.DataFrame({"month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
                     "revenue": [12, 18, 15, 22, 30, 27],
                     "cost": [8, 10, 11, 14, 16, 15]})
 cat = pd.DataFrame({"category": ["A", "B", "C", "D"], "value": [42, 27, 63, 35]})
+kpi = pd.DataFrame({"completion_pct": [60, 70, 80, 90]})
 
 se.line_plot(ts, "month", ["revenue", "cost"])[0].savefig(f"{out}/line.png", dpi=150)
 se.area_plot(ts, "month", "revenue")[0].savefig(f"{out}/area.png", dpi=150)
 se.bar_plot(cat, "category", "value")[0].savefig(f"{out}/bar.png", dpi=150)
 se.hbar_plot(cat, "category", "value")[0].savefig(f"{out}/hbar.png", dpi=150)
-se.donut_plot(75, label="Completion")[0].savefig(f"{out}/donut.png", dpi=150)
+se.donut_plot(kpi, "completion_pct", label="Completion")[0].savefig(
+    f"{out}/donut.png", dpi=150)
 se.gauge_plot(80, label="Score")[0].savefig(f"{out}/gauge.png", dpi=150)
 ```
 

@@ -93,8 +93,16 @@ def hbar_plot(df, category, value):
     return fig, ax
 
 
-def donut_plot(value, label=""):
-    """Gradient progress ring for value (0-100) with a centered percentage."""
+def donut_plot(df, column, agg="mean", label=None):
+    """Gradient progress ring for the `agg` of `column` in `df` (0-100%).
+
+    Ties the ring to a dataset column so the chart states what it
+    represents: a top title (the label) and a subtitle name the metric,
+    and the centered "NN%" is `df[column].agg(...)`, clipped to [0, 100].
+    e.g. donut_plot(df, "uptime_pct", agg="mean", label="Uptime").
+    """
+    value = float(getattr(df[column], agg)())
+    label = label or f"{agg} of {column}"
     fig, ax = s.new_fig((5, 5))
     ax.set_aspect("equal")
     ax.axis("off")
@@ -103,9 +111,9 @@ def donut_plot(value, label=""):
     s.arc(ax, -90, -90 + 360 * frac, r=1.0, lw=22, cmap=s.BLEND_CMAP)
     ax.text(0, 0.05, f"{value:.0f}%", ha="center", va="center",
             fontsize=32, fontweight="bold", color=s.THEME["text"])
-    if label:
-        ax.text(0, -0.22, label, ha="center", va="center",
-                fontsize=11, color=s.THEME["muted"])
+    ax.text(0, -0.22, label, ha="center", va="center",
+            fontsize=11, color=s.THEME["muted"])
+    s.title(ax, label)
     ax.set_xlim(-1.3, 1.3)
     ax.set_ylim(-1.3, 1.3)
     return fig, ax
