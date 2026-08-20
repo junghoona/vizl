@@ -54,17 +54,26 @@ def area_plot(df, x, y):
 
 
 def bar_plot(df, category, value):
-    """Vertical rounded bars filled with the coral-to-periwinkle gradient."""
+    """Vertical rounded bars filled with the coral-to-periwinkle gradient.
+
+    Each bar represents one row of `df`: its position/label along the
+    x-axis is `category`, and its height (also annotated above the bar)
+    is `value`.
+    """
     fig, ax = s.new_fig()
     cats, vals = df[category].tolist(), df[value].to_numpy(dtype=float)
     xs = range(len(cats))
     for xi, v in zip(xs, vals):
         s.vbar(ax, xi, v, 0.6, s.BLEND_CMAP)
+        ax.text(xi, v + vals.max() * 0.03, f"{v:g}", ha="center",
+                va="bottom", fontsize=10, color=s.THEME["text"])
     ax.set_xticks(list(xs))
     ax.set_xticklabels(cats)
     ax.set_xlim(-0.7, len(cats) - 0.3)
     ax.set_ylim(0, vals.max() * 1.15)
-    s.title(ax, value)
+    ax.set_xlabel(category)
+    ax.set_ylabel(value)
+    s.title(ax, f"{value} by {category}")
     return fig, ax
 
 
