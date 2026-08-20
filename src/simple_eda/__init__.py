@@ -1,4 +1,4 @@
-"""simple_eda: a tiny pandas-based exploratory data analysis toolkit."""
+"""simple_eda: a tiny pandas + matplotlib exploratory data analysis toolkit."""
 
 from .core import (
     categorical_summary,
@@ -10,6 +10,15 @@ from .core import (
     quick_report,
     shape_summary,
 )
+from .plots import (
+    area_plot,
+    bar_plot,
+    donut_plot,
+    gauge_plot,
+    hbar_plot,
+    line_plot,
+    theme,
+)
 
 __all__ = [
     "load_csv",
@@ -20,6 +29,13 @@ __all__ = [
     "categorical_summary",
     "correlation_matrix",
     "quick_report",
+    "theme",
+    "line_plot",
+    "area_plot",
+    "bar_plot",
+    "hbar_plot",
+    "donut_plot",
+    "gauge_plot",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
