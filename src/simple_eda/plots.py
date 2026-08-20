@@ -30,6 +30,8 @@ def line_plot(df, x, y, smooth=True):
     if not is_num:
         ax.set_xticks(xn)
         ax.set_xticklabels(df[x].tolist())
+    ax.set_xlabel(x)
+    ax.set_ylabel(y if isinstance(y, str) else "value")
     s.title(ax, y if isinstance(y, str) else " vs ".join(cols))
     if len(cols) > 1:
         ax.legend(loc="upper left")
@@ -37,7 +39,12 @@ def line_plot(df, x, y, smooth=True):
 
 
 def area_plot(df, x, y):
-    """Filled wave/area chart that fades to transparent toward the baseline."""
+    """Filled wave/area chart that fades to transparent toward the baseline.
+
+    Traces `df[y]` against `df[x]`, so the filled wave shows how `y`
+    moves across `x` — e.g. area_plot(df, "month", "revenue") shows
+    revenue over time.
+    """
     fig, ax = s.new_fig()
     xn, is_num = s.xvals(df, x)
     yv = df[y].to_numpy(dtype=float)
@@ -49,7 +56,9 @@ def area_plot(df, x, y):
     if not is_num:
         ax.set_xticks(xn)
         ax.set_xticklabels(df[x].tolist())
-    s.title(ax, y)
+    ax.set_xlabel(x)
+    ax.set_ylabel(y)
+    s.title(ax, f"{y} over {x}")
     return fig, ax
 
 
@@ -128,8 +137,16 @@ def donut_plot(df, column, agg="mean", label=None):
     return fig, ax
 
 
-def gauge_plot(value, label=""):
-    """Semicircular gauge with a gradient arc, a needle, and a pill label."""
+def gauge_plot(df, column, agg="mean", label=None):
+    """Semicircular gauge for the `agg` of `column` in `df` (0-100%).
+
+    Ties the gauge to a dataset column so the chart states what it
+    represents: a top title (the label) and a pill caption name the
+    metric, and the needle position is `df[column].agg(...)`, clipped
+    to [0, 100]. e.g. gauge_plot(df, "csat_pct", agg="mean").
+    """
+    value = float(getattr(df[column], agg)())
+    label = label or f"{agg} of {column}"
     fig, ax = s.new_fig((5.5, 3.4))
     ax.set_aspect("equal")
     ax.axis("off")
@@ -145,9 +162,9 @@ def gauge_plot(value, label=""):
                 edgecolor="none", alpha=0.6)
     ax.text(0, -0.35, f"{value:.0f}%", ha="center", va="center",
             fontsize=20, fontweight="bold", color=s.THEME["text"], bbox=pill)
-    if label:
-        ax.text(0, -0.65, label, ha="center", va="center",
-                fontsize=10, color=s.THEME["muted"])
+    ax.text(0, -0.65, label, ha="center", va="center",
+            fontsize=10, color=s.THEME["muted"])
+    s.title(ax, label)
     ax.set_xlim(-1.3, 1.3)
-    ax.set_ylim(-0.3, 1.3)
+    ax.set_ylim(-0.65, 1.3)
     return fig, ax
